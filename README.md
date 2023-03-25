@@ -1,2 +1,7 @@
 # hackp0d
-iPod 4th gen + pi zero 2
+mplur.eth technologies 2023
+
+## Apps
+### Home
+### Settings
+### Crypto
