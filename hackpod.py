@@ -175,8 +175,6 @@ class RootPage(MenuPage):
         self.page_start = 0
     
     def get_pages(self):
-        # if (not spotify_manager.DATASTORE.now_playing):
-        #    return self.pages[0:-1]
         return self.pages
     
     def total_size(self):
