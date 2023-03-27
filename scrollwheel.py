@@ -1,7 +1,8 @@
 from sys import platform
 from config import *
+import sys_manager
 
-def processInput(app, input, page):
+def processInput(app, input):
     global wheel_position, last_button, last_interaction
     position = input[2]
     button = input[0]
