@@ -14,7 +14,7 @@ class EthPriceFrame(tk.Frame):
         self.active = False
         self.update_time = False
         self.configure(bg=SPOT_BLACK)
-        self.header_label = tk.Label(self, text ="ETHUSD", font = LARGEFONT, background=SPOT_BLACK, foreground=SPOT_GREEN) 
+        self.header_label = tk.Label(self, text ="ETHUSDT", font = LARGEFONT, background=SPOT_BLACK, foreground=SPOT_GREEN) 
         self.header_label.grid(sticky='we', padx=(0, 10))
         self.grid_columnconfigure(0, weight=1)
         divider = tk.Canvas(self)
@@ -24,35 +24,28 @@ class EthPriceFrame(tk.Frame):
         contentFrame.grid(row = 2, column = 0, sticky ="nswe")
         contentFrame.grid_columnconfigure(0, weight=1)
         self.grid_rowconfigure(2, weight=1)
-        self.context_label = tk.Label(contentFrame, text ="", font = LARGEFONT, background=SPOT_BLACK, foreground=SPOT_GREEN) 
-        self.context_label.grid(row=0, column=0,sticky ="w", padx=int(50 * SCALE))
-        self.artist_label = tk.Label(contentFrame, text ="artist", font = SMALL_FONT, background=SPOT_BLACK, foreground=SPOT_GREEN) 
-        self.artist_label.grid(row=2, column=0,sticky ="we", padx=(10, 30))
-        self.album_label = tk.Label(contentFrame, text ="album", font = LARGEFONT, background=SPOT_BLACK, foreground=SPOT_GREEN) 
-        self.album_label.grid(row=3, column=0,sticky ="we", padx=(10, 30))
-        self.track_label = tk.Label(contentFrame, text="track", font = LARGEFONT, background=SPOT_GREEN, foreground=SPOT_BLACK)
-        self.track_label.grid(row=1, column=0,sticky ="we", padx=(30, 50))
+        self.price_price = tk.Label(contentFrame, text="0", font = LARGEFONT, background=SPOT_GREEN, foreground=SPOT_BLACK)
+        self.price_price.grid(row=1, column=0,sticky ="we", padx=(30, 50))
+        self.open_label = tk.Label(contentFrame, text="open", font = MED_FONT, background=SPOT_BLACK, foreground=SPOT_GREEN)
+        self.open_label.grid(row=2, column=0,sticky ="we", padx=(30, 50))
+        self.price_reco = tk.Label(contentFrame, text ="reco", font = LARGEFONT, background=SPOT_BLACK, foreground=SPOT_GREEN) 
+        self.price_reco.grid(row=3, column=0,sticky ="we", padx=(10, 30))
         
     def update_eth_price(self, eth_price):
         ethprice = eth_price['price']
-        ethchange = eth_price['percent_change_1h']
-        ethvolume = eth_price['volume_24h']
-        ethprevprice = eth_price['prev_price']
+        prev_price = eth_price['prev_price']
+        open_price = eth_price['open']
+        # ethchange = eth_price['percent_change_1h']
+        # ethvolume = eth_price['volume_24h']
         ethprice_formatted = "{:.2f}".format(ethprice)
-        self.artist_label.configure(text="{:+.2f}".format(ethvolume))
-
-        if ethprevprice >= ethprice:
+        if open_price >= ethprice:
             bgcolor = SPOT_RED
         else: 
             bgcolor = SPOT_GREEN
 
-        if ethchange >= 0: 
-            changecolor = SPOT_GREEN
-        else: 
-            changecolor = SPOT_RED
-
-        self.track_label.configure(text=ethprice_formatted, background=bgcolor)
-        self.album_label.configure(text="{:+.2f}".format(ethchange), foreground=changecolor)
+        self.price_reco.configure(text=eth_price["reco"])
+        self.price_price.configure(text=ethprice_formatted, background=bgcolor)
+        self.open_label.configure(text=('OPEN: ' + str(open_price)))
         return
 
 class EthPriceRendering(Rendering):

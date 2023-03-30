@@ -1,14 +1,13 @@
-# Settings Menu for the hackP0d
-# MIT / mplur.eth 2023
+# Wifi discovery and setting the wifi network
+from wifi import Cell, Scheme
 from apps.shared.hp_menupage import MenuPage
-from apps.settings.subpages.settings_wifi import WifiPage
 
-class SettingsPage(MenuPage):
+class WifiPage(MenuPage):
     def __init__(self, previous_page):
-        super().__init__("Settings", previous_page, has_sub_page=True)
+        super().__init__("Wifi", previous_page, has_sub_page=True)
         print("change")
         self.pages = [
-            WifiPage(self, "Wifi", EthPriceCommand())
+           # WifiPage(self, "Wifi")
            # EthPricePage(self, "ETH Price", EthPriceCommand()),
         ]
         self.index = 0
@@ -24,12 +23,3 @@ class SettingsPage(MenuPage):
 
     def page_at(self, index):
         return self.get_pages()[index]
-
-class EthPriceCommand():
-    def __init__(self, runnable = lambda:()):
-        self.has_run = False
-        self.runnable = runnable
-    
-    def run(self):
-        self.has_run = True
-        self.runnable()

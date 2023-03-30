@@ -2,9 +2,47 @@ import threading
 import requests
 import time
 import os
+import tradingview_ws
+from tradingview_ta import TA_Handler, Interval, Exchange
+from wifi import Cell, Scheme
 
 has_internet = True
+eth_price = {'symbol': 'ETHUSD', 'price': 0, 'prev_price': 0}
 prev_price = 0
+
+def callbackFunc(s):
+    eth = TA_Handler(
+        symbol="ETHUSDT",
+        screener="crypto",
+        exchange="COINBASE",
+        interval=Interval.INTERVAL_4_HOURS
+    )
+    print(eth.get_analysis().summary)
+    reco = eth.get_analysis().summary
+    indicators = eth.get_analysis().indicators
+    print(reco, type(reco))
+    print(indicators['open'])
+    print("Tradingview call back")
+    global eth_price
+    global prev_price
+    s["prev_price"] = prev_price
+    s["reco"] = reco['RECOMMENDATION']
+    s["open"] = indicators['open']
+    print(s)
+    eth_price = s
+    prev_price = s["price"]
+
+def sub_eth_price():
+    print("Creating the tradingview thing")
+
+    # Example output: {"RECOMMENDATION": "BUY", "BUY": 8, "NEUTRAL": 6, "SELL": 3}
+    pair = "ETHUSD"
+    market = "crypto" # 'stock' | 'futures' | 'forex' | 'cfd' | 'crypto' | 'index' | 'economic'
+    username = None
+    password = None
+    trading = tradingview_ws.TradingViewWs(pair, market, username, password)
+    # get quote price
+    trading.realtime_quote(callbackFunc)
 
 def screen_sleep():
     global screen_on
@@ -27,44 +65,11 @@ def check_internet(request):
         has_internet = False
     return result
 
-def get_eth_price(data = None):
-    global prev_price
-    global eth_price
-    res = requests.get(
-        f"https://pro-api.coinmarketcap.com/v2/cryptocurrency/quotes/latest?CMC_PRO_API_KEY=10bc11b8-4a12-43fe-8000-8503b984243f&symbol=ETH"
-    )
-    if res.status_code == 200:
-        res = res.json()
-        token = res['data']['ETH'][0]['quote']['USD']
-        change = token['percent_change_1h']
-        price = token['price']
-        token['prev_price'] = prev_price
-        assert len(res) != 0, "Nothing Found."
-    else:
-        print("Network Error!")
-        exit(1)
+def get_wifi_networks():
+    print(Cell.all('wlan0'))
 
-    if (not token):
-        return None
-    else:
-        prev_price = price
-        print("token: ", token)
-        eth_price = token
-        has_internet = True
-        return token
+get_price = threading.Thread(target=sub_eth_price, name="GetPrice")
+get_price.start()
 
-def bg_crypto_loop():
-    global sleep_time
-    while True:
-        # refresh_now_playing()
-        get_eth_price()
-        time.sleep(sleep_time)
-        sleep_time = min(12, sleep_time * 20)
-
-sleep_time = 0.3
-thread = threading.Thread(target=bg_crypto_loop, args=())
-thread.daemon = True                            # Daemonize thread
-thread.start()
-
-def run_async(fun):
-    threading.Thread(target=fun, args=()).start()
+get_wifi = threading.Thread(target=get_wifi_networks, name="get_wifi")
+get_wifi.start()
