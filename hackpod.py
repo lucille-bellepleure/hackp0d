@@ -22,7 +22,14 @@ class tkinterApp(tk.Tk):
 
         self.geometry(DIMENSIONS)
         self.configure(bg=SPOT_BLACK)
-        self.attributes('-fullscreen', True)
+
+        if (platform == 'darwin'):
+            self.geometry("320x240")
+            SCALE = 0.3
+        else:
+            self.attributes('-fullscreen', True)
+            SCALE = self.winfo_screenheight() / 930
+
         # creating a container 
         container = tk.Frame(self)   
         container.pack(side = "bottom", fill = "both", expand = True)  
