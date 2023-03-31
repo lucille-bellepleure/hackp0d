@@ -22,7 +22,7 @@ class tkinterApp(tk.Tk):
 
         self.geometry(DIMENSIONS)
         self.configure(bg=SPOT_BLACK)
-
+        self.attributes('-fullscreen', True)
         # creating a container 
         container = tk.Frame(self)   
         container.pack(side = "bottom", fill = "both", expand = True)  

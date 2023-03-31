@@ -1,3 +1,5 @@
 pillow
 tradingview-ws
+numpy==1.21.4
 pandas
+wifi
