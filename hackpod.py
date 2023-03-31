@@ -23,12 +23,8 @@ class tkinterApp(tk.Tk):
         self.geometry(DIMENSIONS)
         self.configure(bg=SPOT_BLACK)
 
-        if (sys_manager.wifi_host != 'rpi-zero-2'):
-            self.geometry("320x240")
-            SCALE = 0.3
-        else:
-            self.attributes('-fullscreen', True)
-            self.geometry("320x240")
+        self.attributes('-fullscreen', True)
+        self.geometry("320x240")
 
         # creating a container 
         container = tk.Frame(self)   
