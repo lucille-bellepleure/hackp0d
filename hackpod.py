@@ -28,7 +28,7 @@ class tkinterApp(tk.Tk):
             SCALE = 0.3
         else:
             self.attributes('-fullscreen', True)
-            SCALE = self.winfo_screenheight() / 930
+            self.geometry("320x240")
 
         # creating a container 
         container = tk.Frame(self)   
