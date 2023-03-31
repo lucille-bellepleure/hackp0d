@@ -8,7 +8,7 @@ class SettingsPage(MenuPage):
         super().__init__("Settings", previous_page, has_sub_page=True)
         print("change")
         self.pages = [
-            WifiPage(self, "Wifi", EthPriceCommand())
+            WifiPage(self, "Wifi", WifiCommand())
            # EthPricePage(self, "ETH Price", EthPriceCommand()),
         ]
         self.index = 0
@@ -25,7 +25,7 @@ class SettingsPage(MenuPage):
     def page_at(self, index):
         return self.get_pages()[index]
 
-class EthPriceCommand():
+class WifiCommand():
     def __init__(self, runnable = lambda:()):
         self.has_run = False
         self.runnable = runnable

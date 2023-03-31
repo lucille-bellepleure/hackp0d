@@ -5,10 +5,15 @@ import os
 import tradingview_ws
 from tradingview_ta import TA_Handler, Interval, Exchange
 from wifi import Cell, Scheme
+import subprocess
+import socket
 
 has_internet = True
 eth_price = {'symbol': 'ETHUSD', 'price': 0, 'prev_price': 0}
 prev_price = 0
+wifi_ssid = "Unknown"
+wifi_ip = ""
+wifi_host = ""
 
 def callbackFunc(s):
     eth = TA_Handler(
@@ -66,7 +71,22 @@ def check_internet(request):
     return result
 
 def get_wifi_networks():
-    print(Cell.all('wlan0'))
+    get_wifi_ssid()
+
+def get_wifi_ssid():
+    global wifi_ssid
+    global wifi_host
+    global wifi_ip
+    try:
+        output = subprocess.check_output(['iwgetid']).decode()
+        wifi_ssid = output.split('"')[1]
+        wifi_host = socket.gethostname()   
+        wifi_ip = socket.gethostbyname(wifi_host)   
+        print("Your Computer Name is:"+wifi_host)   
+        print("Your Computer IP Address is:"+wifi_ip)   
+        print("Connected Wifi SSID: " + output.split('"')[1])
+    except Exception as e:
+        print(e)
 
 get_price = threading.Thread(target=sub_eth_price, name="GetPrice")
 get_price.start()

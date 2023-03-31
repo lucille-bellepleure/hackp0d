@@ -7,7 +7,8 @@ import sys_manager
 import socket
 from select import select
 import time
-from apps.settings.hp_settings import SettingsPage 
+from apps.settings.hp_settings import SettingsPage
+from apps.settings.subpages.settings_wifi import WifiPage, WifiFrame
 from apps.shared.hp_menupage import Rendering, MenuPage
 from apps.crypto.hp_crypto import EthPricePage, EthPriceFrame, EthPriceCommand
 from apps.homepage.hp_homepage import StartFrame
@@ -33,7 +34,7 @@ class tkinterApp(tk.Tk):
    
         # iterating through a tuple consisting 
         # of the different page layouts 
-        for F in (StartFrame, EthPriceFrame): 
+        for F in (StartFrame, EthPriceFrame, WifiFrame): 
    
             frame = F(container, self) 
    
@@ -202,11 +203,21 @@ def render_eth_price(app, eth_price_render):
     app.show_frame(EthPriceFrame)
     eth_price_render.subscribe(app, update_eth_price)
 
+def update_wifi():
+    frame = app.frames[WifiPage]
+    frame.update_wifi()
+
+def render_wifi(app, wifi_render):
+    app.show_frame(WifiFrame)
+    wifi_render.subscribe(app, update_wifi)
+
 def render(app, render):
     if (render.type == MENU_RENDER_TYPE):
         render_menu(app, render)
     elif (render.type == ETH_PRICE_RENDER):
         render_eth_price(app, render)
+    elif (render.type == WIFI_RENDER):
+        render_wifi(app, render)
 
 # Driver Code 
 app = tkinterApp() 

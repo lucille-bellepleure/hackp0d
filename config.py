@@ -25,6 +25,7 @@ LINE_TITLE = 2
 
 MENU_RENDER_TYPE = 0
 ETH_PRICE_RENDER = 3
+WIFI_RENDER = 1
 
 UP_KEY_CODE = 8255233 if platform == "darwin" else 116 
 DOWN_KEY_CODE = 8320768 if platform == "darwin" else 111
