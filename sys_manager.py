@@ -74,6 +74,7 @@ def get_wifi_networks():
     get_wifi_ssid()
 
 def get_wifi_ssid():
+    global has_internet
     global wifi_ssid
     global wifi_host
     global wifi_ip
@@ -85,10 +86,12 @@ def get_wifi_ssid():
         wifi_ssid = output.split('"')[1]
         wifi_host = socket.gethostname()   
         wifi_ip = IP   
+        has_internet = True
         print("Your Computer Name is:"+wifi_host)   
         print("Your Computer IP Address is:"+wifi_ip)   
         print("Connected Wifi SSID: " + output.split('"')[1])
     except Exception as e:
+        has_internet = False
         print(e)
 
 get_price = threading.Thread(target=sub_eth_price, name="GetPrice")

@@ -73,11 +73,6 @@ class StartFrame(tk.Frame):
     def set_header(self, header, now_playing = None, has_wifi = False):
         truncd_header = header if len(header) < 20 else header[0:17] + "..."
         self.header_label.configure(text=truncd_header)
-        play_image = self.space_image
-        if now_playing is not None:
-            play_image = self.play_image if now_playing['is_playing'] else self.pause_image
-        self.play_indicator.configure(image = play_image)
-        self.play_indicator.image = play_image
         wifi_image = self.wifi_image if has_wifi else self.space_image
         self.wifi_indicator.configure(image = wifi_image)
         self.wifi_indicator.image = wifi_image

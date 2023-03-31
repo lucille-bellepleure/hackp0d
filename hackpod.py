@@ -23,7 +23,7 @@ class tkinterApp(tk.Tk):
         self.geometry(DIMENSIONS)
         self.configure(bg=SPOT_BLACK)
 
-        if (platform == 'darwin'):
+        if (sys_manager.wifi_host == 'rpi-zero-2'):
             self.geometry("320x240")
             SCALE = 0.3
         else:
