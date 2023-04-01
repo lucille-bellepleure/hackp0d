@@ -23,7 +23,7 @@ class tkinterApp(tk.Tk):
         self.geometry(DIMENSIONS)
         self.configure(bg=SPOT_BLACK)
 
-        #self.attributes('-fullscreen', True)
+        self.attributes('-fullscreen', True)
         self.geometry("320x240")
 
         # creating a container 
