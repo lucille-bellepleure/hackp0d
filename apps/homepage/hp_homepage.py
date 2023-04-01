@@ -14,7 +14,7 @@ class StartFrame(tk.Frame):
         self.play_image = ImageTk.PhotoImage(flattenAlpha(Image.open('images/pod_play.png')))
         self.pause_image = ImageTk.PhotoImage(flattenAlpha(Image.open('images/pod_pause.png')))
         self.space_image = ImageTk.PhotoImage(flattenAlpha(Image.open('images/pod_space.png')))
-        self.wifi_image = ImageTk.PhotoImage(flattenAlpha(Image.open('images/pod_wifi.png')))
+        self.wifi_image = ImageTk.PhotoImage(flattenAlpha(Image.open('images/hackpod_wifi.png')))
         self.configure(bg=SPOT_BLACK)
         header_container = tk.Canvas(self, bg=SPOT_BLACK, highlightthickness=0, relief='ridge')
         header_container.grid(sticky='we')

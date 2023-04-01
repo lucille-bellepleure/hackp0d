@@ -6,9 +6,8 @@ from apps.settings.subpages.settings_wifi import WifiPage
 class SettingsPage(MenuPage):
     def __init__(self, previous_page):
         super().__init__("Settings", previous_page, has_sub_page=True)
-        print("change")
         self.pages = [
-            WifiPage(self, "Wifi", WifiCommand())
+            WifiPage(self, "Wi-Fi", WifiCommand())
            # EthPricePage(self, "ETH Price", EthPriceCommand()),
         ]
         self.index = 0

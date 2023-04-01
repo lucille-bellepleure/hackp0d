@@ -23,13 +23,13 @@ class tkinterApp(tk.Tk):
         self.geometry(DIMENSIONS)
         self.configure(bg=SPOT_BLACK)
 
-        self.attributes('-fullscreen', True)
+        #self.attributes('-fullscreen', True)
         self.geometry("320x240")
 
         # creating a container 
         container = tk.Frame(self)   
         container.pack(fill = "both", expand = True)  
-        container.grid_rowconfigure(1, weight = 1) 
+        container.grid_rowconfigure(1, weight = 2) 
         container.grid_columnconfigure(0, weight = 2) 
         
 
@@ -171,7 +171,6 @@ def onDownPressed():
 class RootPage(MenuPage):
     def __init__(self, previous_page):
         super().__init__("hackP0dR00t", previous_page, has_sub_page=True)
-        print("change")
         self.pages = [
             EthPricePage(self, "ETH Price", EthPriceCommand()),
             SettingsPage(self)
@@ -226,6 +225,9 @@ def render(app, render):
 # Driver Code 
 app = tkinterApp() 
 app.overrideredirect(False)
+
+app.configure(bg=SPOT_BLACK)
+
 
 sock = socket.socket(socket.AF_INET, # Internet
                      socket.SOCK_DGRAM) # UDP

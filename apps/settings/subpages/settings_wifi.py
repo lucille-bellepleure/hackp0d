@@ -14,7 +14,7 @@ class WifiFrame(tk.Frame):
         self.active = False
         self.update_time = False
         self.configure(bg=SPOT_BLACK)
-        self.header_label = tk.Label(self, text ="Wifi", font = LARGEFONT, background=SPOT_BLACK, foreground=SPOT_GREEN) 
+        self.header_label = tk.Label(self, text ="Wi-Fi", font = LARGEFONT, background=SPOT_BLACK, foreground=SPOT_GREEN) 
         self.header_label.grid(sticky='we', padx=(0, 10))
         self.grid_columnconfigure(0, weight=1)
         divider = tk.Canvas(self)

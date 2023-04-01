@@ -1,6 +1,6 @@
 from sys import platform
 
-SPOT_GREEN = "#FFFFFF"
+SPOT_GREEN = "#1DB954"
 SPOT_BLACK = "#000000"
 SPOT_WHITE = "#FFFFFF"
 SPOT_RED = "#D30000"
