@@ -6,7 +6,7 @@ from tkinter import *
 track_uris = ['spotify:track:4iV5W9uYEdYUVa79Axb7Rh', 'spotify:track:3eZEiV7w8Q0MVjVXRvvZtX', 'spotify:track:3qXpX7tK4fNkwJF8Y4WtSA']
 
 # start Raspotify as a subprocess
-raspotify_process = subprocess.Popen(['raspotify', '--backend', 'pipe', '--onevent', 'python /path/to/your/program.py'], stdin=subprocess.PIPE, stdout=subprocess.PIPE)
+raspotify_process = subprocess.Popen(['librespot', '--backend', 'pipe', '--onevent', 'python /home/mi/hackp0d/gpt.py'], stdin=subprocess.PIPE, stdout=subprocess.PIPE)
 
 # create a PulseAudio client
 pulse = pulsectl.Pulse('raspotify-client')
