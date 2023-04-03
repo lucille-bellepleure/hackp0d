@@ -4,6 +4,7 @@ import spotipy
 import spotipy.util as util
 from spotipy.oauth2 import SpotifyOAuth
 import subprocess
+import os
 
 # Set up redis client
 r = redis.Redis(host='localhost', port=6379, db=0)
