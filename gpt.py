@@ -1,101 +1,94 @@
-import os
+import tkinter as tk
 import redis
 import spotipy
-from spotipy.oauth2 import SpotifyOAuth
+import spotipy.util as util
 import subprocess
 
-# Initialize Redis client
-redis_client = redis.Redis(host='localhost', port=6379, db=0)
+# Set up redis client
+r = redis.Redis(host='localhost', port=6379, db=0)
 
-# Spotify API credentials
-SPOTIPY_CLIENT_ID = os.environ['SPOTIPY_CLIENT_ID']
-SPOTIPY_CLIENT_SECRET = os.environ['SPOTIPY_CLIENT_SECRET']
-SPOTIPY_REDIRECT_URI = os.environ['SPOTIPY_REDIRECT_URI']
+sp = spotipy.Spotify(auth_manager=SpotifyOAuth(
+    scope="user-library-read",
+    client_id=os.environ.get('SPOTIPY_CLIENT_ID'),
+    client_secret=os.environ.get('SPOTIPY_CLIENT_SECRET'),
+    redirect_uri=os.environ.get('SPOTIPY_REDIRECT_URI'),
+    cache_path=".cache",
+))
 
-# Initialize Spotipy client
-sp = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id=SPOTIPY_CLIENT_ID,
-                                               client_secret=SPOTIPY_CLIENT_SECRET,
-                                               redirect_uri=SPOTIPY_REDIRECT_URI))
+# Set up raspotify subprocess
+raspotify_process = subprocess.Popen(["sudo", "systemctl", "start", "raspotify"])
 
-# Define album list function
-def get_album_list():
-    # Check Redis cache for saved albums
-    if redis_client.exists('spotify_albums'):
-        album_list = redis_client.lrange('spotify_albums', 0, -1)
-        album_list = [album.decode('utf-8') for album in album_list]
-    else:
-        # If no saved albums, query Spotify API and save results to Redis
-        results = sp.current_user_saved_albums()
-        album_list = [item['album']['name'] for item in results['items']]
-        redis_client.rpush('spotify_albums', *album_list)
+# Define function to get user's albums and store them in redis
+def get_albums():
+    results = sp.current_user_saved_albums()
+    albums = results['items']
+    while results['next']:
+        results = sp.next(results)
+        albums.extend(results['items'])
+    for album in albums:
+        r.hset('albums', album['id'], album['name'])
 
-    return album_list
-
-# Define track list function
-def get_track_list(album_name):
-    # Check Redis cache for saved tracks
-    if redis_client.exists(f'spotify_tracks:{album_name}'):
-        track_list = redis_client.lrange(f'spotify_tracks:{album_name}', 0, -1)
-        track_list = [track.decode('utf-8') for track in track_list]
-    else:
-        # If no saved tracks, query Spotify API and save results to Redis
-        results = sp.search(q=f'album:{album_name}', type='track', limit=50)
-        track_list = [item['name'] for item in results['tracks']['items']]
-        redis_client.rpush(f'spotify_tracks:{album_name}', *track_list)
-
-    return track_list
+# Define function to get tracks for an album and return them as a list
+def get_tracks(album_id):
+    results = sp.album_tracks(album_id)
+    tracks = []
+    for track in results['items']:
+        tracks.append(track['name'])
+    return tracks
 
 # Define function to play a track on raspotify
-def play_track(track_name):
-    cmd = f'raspotify play -t "{track_name}"'
-    subprocess.run(cmd, shell=True)
+def play_track(track_uri):
+    subprocess.run(["sudo", "raspotify", "--uri", track_uri])
 
+# Set up tkinter window
+root = tk.Tk()
+root.geometry("320x240")
+root.configure(background='black')
 
-# Define menu items
-menu_items = [
-    "Now Playing",
-    "Albums",
-    "Quit"
-]
+# Set up font
+font = ("Courier", 12)
 
-# Define menu header
-menu_header = "Spotify"
+# Define function to update menu
+def update_menu(menu_title, menu_items):
+    # Clear current menu
+    for widget in root.winfo_children():
+        widget.destroy()
 
-# Define wifi icon
-wifi_icon = "  WIFI ICON HERE"
+    # Add title
+    title_label = tk.Label(root, text=menu_title, fg="green", bg="black", font=font)
+    title_label.pack(side="top")
 
-# Define font
-font = "Computer_Terminal.ttf"
+    # Add menu items
+    for item in menu_items:
+        item_label = tk.Label(root, text=item, fg="green", bg="black", font=font)
+        item_label.pack(side="top")
 
-# Initialize menu selection
-menu_selection = 0
+    # Add wifi icon
+    wifi_icon = tk.Label(root, text="WIFI_ICON", fg="green", bg="black", font=font)
+    wifi_icon.pack(side="right")
 
-# Run menu loop
-while True:
-    # Clear the screen
-    os.system('clear')
+    # Refresh window
+    root.update()
 
-    # Print the menu header
-    print(menu_header + wifi_icon)
+# Define function to handle menu selection
+def handle_selection(selection):
+    if selection == "settings":
+        update_menu("SETTINGS", ["Option 1", "Option 2", "Option 3"])
+    elif selection == "wallet":
+        update_menu("WALLET", ["Balance: $100", "Deposit", "Withdraw"])
+    elif selection == "music":
+        update_menu("ALBUMS", list(r.hvals('albums')))
+    elif selection == "phone":
+        update_menu("PHONE", ["Dial", "Contacts", "Call History"])
+    elif selection == "about":
+        update_menu("ABOUT", ["Version 1.0", "Created by Me"])
+    elif selection in r.hvals('albums'):
+        album_id = r.hget('albums', selection)
+        update_menu(selection.upper(), get_tracks(album_id))
+    else:
+        play_track(selection)
 
-    # Print the menu items
-    for i, item in enumerate(menu_items):
-        if i == menu_selection:
-            print(f"\033[32m{item}\033[0m")
-        else:
-            print(item)
-
-    # Wait for user input
-    keypress = input()
-
-    # Process user input
-    if keypress == "up":
-        menu_selection -= 1
-        if menu_selection < 0:
-            menu_selection = len(menu_items) - 1
-    elif keypress == "down":
-        menu_selection += 1
-        if menu_selection == len(menu_items):
-            menu_selection = 0
-    elif keypress == "select":
-        if menu_items[menu_selection] == "
+# Set up initial menu
+menu_title = "MAIN MENU"
+menu_items = ["SETTINGS", "WALLET", "MUSIC", "PHONE", "ABOUT"]
+update_menu
