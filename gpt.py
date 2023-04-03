@@ -2,6 +2,7 @@ import tkinter as tk
 import redis
 import spotipy
 import spotipy.util as util
+from spotipy.oauth2 import SpotifyOAuth
 import subprocess
 
 # Set up redis client
