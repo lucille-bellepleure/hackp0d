@@ -23,8 +23,12 @@ class tkinterApp(tk.Tk):
         self.geometry(DIMENSIONS)
         self.configure(bg=SPOT_BLACK)
 
-        self.attributes('-fullscreen', True)
+        # self.attributes('-fullscreen', True)
         self.geometry("320x240")
+
+        self.bind('<Escape>', lambda e: self.quit())
+
+
 
         # creating a container 
         container = tk.Frame(self)   
@@ -227,7 +231,6 @@ app = tkinterApp()
 app.overrideredirect(False)
 
 app.configure(bg=SPOT_BLACK)
-
 
 sock = socket.socket(socket.AF_INET, # Internet
                      socket.SOCK_DGRAM) # UDP
