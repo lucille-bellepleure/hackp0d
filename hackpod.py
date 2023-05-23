@@ -25,10 +25,7 @@ class tkinterApp(tk.Tk):
 
         # self.attributes('-fullscreen', True)
         self.geometry("320x240")
-
         self.bind('<Escape>', lambda e: self.quit())
-
-
 
         # creating a container 
         container = tk.Frame(self)   
@@ -60,6 +57,8 @@ class tkinterApp(tk.Tk):
         frame.tkraise() 
 
 # Scrollwheel stuff
+
+ 
 def processInput(app, input, page):
     global wheel_position, last_button, last_interaction
     position = input[2]
